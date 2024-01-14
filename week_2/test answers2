@@ -53,3 +53,15 @@ ALTER TABLE `client`
   ADD COLUMN source_id INT null,
   ADD CONSTRAINT fk_source_id FOREIGN KEY (source_id) REFERENCES source(id);
 
+
+class Tag(models.Model):
+    title = models.CharField(max_length=250)
+
+class NewsItem(models.Model):
+models.ManyToManyField(Tag)
+    title = models.CharField(max_length=250)
+    date = models.DateTimeField(auto_now_add=True)
+    description = models.TextField()
+    tag = [определение_поля]
+
+
