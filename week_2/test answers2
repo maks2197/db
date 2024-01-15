@@ -76,3 +76,36 @@ class Person(models.Model):
     delivery_adress = models.TextField(blank=True)
     [2]
 [1]: person = models.ForeignKey(Person) [2]: ничего
+
+
+В импортированной базе магазина посмотрите план следующего запроса:
+Сколько кортежей будет обработано из таблицы good?(322)DB from 5 week
+select 
+  name, 
+    ifnull((select category.name from category 
+    join category_has_good on category.id=category_has_good.category_id
+        where category_has_good.good_id=good.id
+        order by category.name limit 1)
+  , 0) as first_category 
+from good where name='F%';
+
+Создайте B-tree индекс на поле с названием товара в отношении good.
+Сколько теперь кортежей будет обработано из таблицы good?(20)
+select 
+  name, 
+    ifnull((select category.name from category 
+    join category_has_good on category.id=category_has_good.category_id
+        where category_has_good.good_id=good.id
+        order by category.name limit 1)
+  , 0) as first_category 
+from good where name like 'F%';
+Операция выборки из good изменила тип. На какой? (range)
+Сколько в итоге кортежей будет задействовано в выборке? 
+Сложно сказать, так как есть подзапрос, выполнение которого зависит от результата основного запроса
+
+Укажите, в каком порядке будут выполняться операции над отношениями в следующем запросе:
+select number, code from sale 
+join client on sale.client_id=client.id
+join status on status.id=status_id
+where status.id in (6, 7);
+(status sale client)
