@@ -1,3 +1,29 @@
+SELECT
+    AVG(DATEDIFF(project_finish,project_start)), -- вычисление среднего значения и показывает разницу между двумя датами--
+    MAX(DATEDIFF(project_finish,project_start)), -- макс длительность проекта в днях
+    MIN(DATEDIFF(project_finish,project_start)) -- мин длительность проекта
+FROM project WHERE project_finish is not null  -- отсекает не заканчивающиеся проекты is not null;
+        and project_finish > project_start; -- если у вас вылезают отрицательные значения
+
+1) Вместо условия: "project_finish is not null" следует использовать следующее: "DATEDIFF(project_finish, project_start) > 0". Похоже, после записи видео базу слегка модифицировали. Или удалить все подобные записи.
+2) Инструкция по добавлению новой базы - см. урок 1.2, шаг 1. Часть "Импорт и работа с тестовыми БД", пункты 4-9.
+И у вас всё получится.
+Не работало:
+
+﻿select project_finish, project_start, 
+avg(datediff(project_finish, project_start)) 
+from project where project_finish is not null group by client_name;﻿
+
+﻿Решение:
+1. в терминале
+sudo nano /etc/mysql/my.cnf
+2. в конце файла дописываем строки
+[mysqld]
+sql_mode="NO_ENGINE_SUBSTITUTION"
+3. сохраняем файл и restart mysql
+sudo systemctl restart mysql
+(отсюда - https://modx.pro/help/12081/)
+
 Добавить таблицу 'best_offer_sale' со следующими полями:
 Название: `id`, тип данных: INT, возможность использования неопределенного значения: Нет, первичный ключ
 Название: `name`, тип данных: VARCHAR(255), возможность использования неопределенного значения: Да
